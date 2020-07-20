@@ -46,4 +46,4 @@ testem.log
 Thumbs.db
 
 # config
-/server/config
+/server/config/dev.js
