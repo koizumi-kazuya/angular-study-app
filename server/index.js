@@ -1,8 +1,9 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const config = require('./config/dev')
+const config = require('./config/')
 const SampleDb = require('./sample-db')
 const app = express()
+const path = require('path')
 
 const productRoute = require('./route/products')
 
@@ -16,13 +17,22 @@ mongoose.connect(
     useUnifiedTopology: true
 }).then(
     () => {
-        const sampleDb = new SampleDb()
-        sampleDb.initDb()
+        if (process.env.NODE_ENV !== 'production') {
+            const sampleDb = new SampleDb()
+            // sampleDb.initDb()
+        }
     }
 )
 
-app.use('/api/v1/products',productRoute)
+app.use('/api/v1/products', productRoute)
 
+if (process.env.NODE_ENV === 'production') {
+    const appPath = path.join(__dirname, '..', 'dist', 'angular-study-app')
+    app.use(express.static(appPath))
+    app.get("*", function (req, res) {
+        res.sendFile(path.resolve(appPath, "index.html"))
+    })
+}
 const PORT = process.env.PORT || '3001'
 
 app.listen(PORT, function () {
