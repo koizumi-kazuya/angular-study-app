@@ -1,5 +1,7 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { Location } from '@angular/common';
+import { AuthService } from 'src/app/auth/shared/auth.service';
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-navbar',
@@ -10,7 +12,7 @@ export class NavbarComponent implements OnInit {
   private toggleButton: any;
   private sidebarVisible: boolean;
 
-  constructor(public location: Location, private element: ElementRef) {
+  constructor(public location: Location, private element: ElementRef, public auth: AuthService,private route :Router) {
     this.sidebarVisible = false;
   }
 
@@ -39,8 +41,6 @@ export class NavbarComponent implements OnInit {
     html.classList.remove('nav-open');
   };
   sidebarToggle() {
-    // const toggleButton = this.toggleButton;
-    // const body = document.getElementsByTagName('body')[0];
     if (this.sidebarVisible === false) {
       this.sidebarOpen();
     } else {
@@ -58,5 +58,9 @@ export class NavbarComponent implements OnInit {
     else {
       return false;
     }
+  }
+  logout() {
+    this.auth.logout()
+    this.route.navigate(['/login'])
   }
 }
