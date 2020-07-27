@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../shared/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-resister',
@@ -7,10 +10,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ResisterComponent implements OnInit {
 
-  test : Date = new Date();
-  focus;
-  focus1;
-  constructor() { }
+  errors: any = []
 
-  ngOnInit() {}
+  constructor(private authService: AuthService, private router: Router) { }
+
+  ngOnInit() { }
+
+  resister(resisterForm) {
+    this.authService.resister(resisterForm.value).subscribe(
+      (result) => {
+        console.log('success')
+        this.router.navigate(['/login'])
+      },
+      (err: HttpErrorResponse) => {
+        this.errors = err.error.errors
+      }
+    )
+  }
+
 }
