@@ -1,19 +1,20 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const bodyParser = require('body-parser')
 const config = require('./config/')
 const SampleDb = require('./sample-db')
 const app = express()
 const path = require('path')
 
 const productRoute = require('./route/products')
-const userRoute = require('./route/users')
+
+// app.get('/products', function (req, res) {
+//     res.json({ 'success': true })
+// })
 
 mongoose.connect(
     config.DB_URI, {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true
+    useUnifiedTopology: true
 }).then(
     () => {
         if (process.env.NODE_ENV !== 'production') {
@@ -23,9 +24,7 @@ mongoose.connect(
     }
 )
 
-app.use(bodyParser.json())
 app.use('/api/v1/products', productRoute)
-app.use('/api/v1/users', userRoute)
 
 if (process.env.NODE_ENV === 'production') {
     const appPath = path.join(__dirname, '..', 'dist', 'angular-study-app')
@@ -39,3 +38,7 @@ const PORT = process.env.PORT || '3001'
 app.listen(PORT, function () {
     console.log('I am running!')
 })
+
+
+
+// mongodb+srv://test:<password>@cluster0.1wybp.mongodb.net/<dbname>?retryWrites=true&w=majority
